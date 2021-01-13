@@ -1,0 +1,1 @@
+global.redirect = true;
