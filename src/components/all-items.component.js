@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import ItemDataService from "../services/item.service";
-import CustomerDataService from "../services/customer.service";
-import { Link } from "react-router-dom";
-import { AiOutlineHeart ,AiFillHeart} from "react-icons/ai";
-import {removeFromWishlist,addToWishlist,removeFromCart,addToCart,getAllItems} from '../actions/items.actions';
+import {getAllItems,getCurrentItemDetails} from '../actions/items.actions';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import ItemDetails from "./item-details.component";
 
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect,
@@ -17,12 +15,10 @@ class AllItems extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.retrieveItems = this.retrieveItems.bind(this);
+    // this.retrieveItems = this.retrieveItems.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveItem = this.setActiveItem.bind(this);
     this.searchItem= this.searchItem.bind(this);
-    this.addToWishlist = this.addToWishlist.bind(this);
-    this.addToCart = this.addToCart.bind(this);
     this.state = {
       items:[],
       currentItem: null,
@@ -33,11 +29,8 @@ class AllItems extends Component {
   }
 
   static propTypes = {  
-    removeFromWishlist: PropTypes.func.isRequired,  
-    addToWishlist: PropTypes.func.isRequired,  
-    removeFromCart: PropTypes.func.isRequired,  
-    addToCart: PropTypes.func.isRequired,  
     getAllItems: PropTypes.func.isRequired,
+    getCurrentItemDetails : PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -58,45 +51,42 @@ class AllItems extends Component {
     });
   }
 
-  retrieveItems() {
-    ItemDataService.getAll()
-      .then(response => {
-        this.setState({
-          items: response.data
-        });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
+  // retrieveItems() {
+  //   ItemDataService.getAll()
+  //     .then(response => {
+  //       this.setState({
+  //         items: response.data
+  //       });
+  //       console.log(response.data);
+  //     })
+  //     .catch(e => {
+  //       console.log(e);
+  //     });
+  // }
   refreshList() {
-    this.retrieveItems();
+    this.props.getAllItems();
     this.setState({
       currentItem: null,
       currentIndex: -1
     });
   }
-
   setActiveItem(item, index) {
-  if(this.state.currentIndex != index){
-    var bufferBase64 = new Buffer( item.photo.data, 'binary' ).toString('base64');
-    this.setState({
-      currentItem: item,
-      currentIndex: index,
-      currentImage: bufferBase64,
-    });
+    console.log(this.props.state);
+    if(this.state.currentIndex != index){
+      this.props.getCurrentItemDetails(item.id);
+      this.setState({
+        currentItem: item,
+        currentIndex: index,
+      });
+    }
+    else{
+      this.props.getCurrentItemDetails(null);
+      this.setState({
+        currentItem: null,
+        currentIndex:-1,
+      })
+    }
   }
-  else{
-    this.setState({
-      currentItem: null,
-      currentIndex:-1,
-      currentImage:null
-    })
-  }
-  }
-
   searchItem() {
     if(this.state.searchTitle != ""){
     ItemDataService.findByTitle(this.state.searchTitle)
@@ -112,27 +102,6 @@ class AllItems extends Component {
     }
     else{
       this.retrieveItems();
-    }
-  }
-
-  addToWishlist(item){
-    if(item.wishlist === true){
-      CustomerDataService.removeFromWishlist(item.id);
-      item.wishlist = false;
-      this.props.removeFromWishlist(item.id);
-      item.wishlist = false;
-    }else{
-      this.props.addToWishlist(item.id);
-      item.wishlist = true;
-    }
-  }
-  addToCart(item){
-    if(item.cart === true){
-      this.props.removeFromCart(item.id);
-      item.cart = false;
-    }else{
-      this.props.addToCart(item.id);
-      item.cart = true;
     }
   }
   render() {
@@ -186,69 +155,10 @@ class AllItems extends Component {
           </ul>
         </div>
         <div className="col-md-6">
-          {currentItem ? (
-            <div>
-              <h4>Item</h4>
-              <div>
-                <label>
-                  <strong>Title:</strong>
-                </label>{" "}
-                {currentItem.name}
-              </div>
-              <div>
-                <label>
-                  <strong>Brand:</strong>
-                </label>{" "}
-                {currentItem.brand}
-              </div>
-              <div>
-                <label>
-                  <strong>Photo:</strong>
-                </label>{" "}
-                <img style={{width:300,height:300}} src={"data:image/jpeg;base64," + currentImage}/>
-              </div>
-              <div>
-                <label>
-                  <strong>Material Type:</strong>
-                </label>{" "}
-                {currentItem.material_type}
-              </div>
-              <div>
-                <label>
-                  <strong>Price:</strong>
-                </label>{" "}
-                {currentItem.price}
-              </div>
-              <div>
-                <label>
-                  <strong>No.of Items left:</strong>
-                </label>{" "}
-                {currentItem.total_items}
-              </div>
-
-              <Link
-                className="badge badge-warning mr-4"
-                onClick={()=>this.addToCart(currentItem)}
-              > {currentItem.cart?"Remove from Cart": "Add to Cart"}
-              </Link>
-              <Link
-                className="badge badge-warning mr-8"
-                onClick={() => this.addToWishlist(currentItem)}
-              >               
-                {currentItem.wishlist?<AiFillHeart/>:<AiOutlineHeart/>}
-              </Link>
-
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on Item name to get more details..!</p>
-            </div>
-          )
-          }
+              <ItemDetails/>
         </div>
       </div>
     );
   }
 }
-export default connect(mapStateToProps,{removeFromWishlist,addToWishlist,removeFromCart,addToCart,getAllItems})(AllItems);
+export default connect(mapStateToProps,{getAllItems,getCurrentItemDetails})(AllItems);

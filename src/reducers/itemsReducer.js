@@ -26,6 +26,12 @@ const itemsReducer = (state = initialState, action) => {
             return {
                 ...state,
             }
+        case 'GET_CURRENT_ITEM_DETAILS' :
+            return {
+                ...state,
+                currentitem : action.data,
+                currentimage : action.image,
+            }
         default:  
             return state;  
     }

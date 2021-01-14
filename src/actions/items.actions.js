@@ -15,12 +15,6 @@ export function getAllItems(){
         })
 
     }
-    // return dispatch => {  
-        // return dispatch({  
-            // type: 'GET_ALL_ITEMS',
-            // data: [{id:"1", name:"Muted Hazelnut Geometric Yoke Kurta Set",material_type:"Kurta Set",brand:"Indo Era",price:"899",total_items:"7",wishlist:true,cart:false},{id:"2", name:"White Salwar",material_type:"Salwar Set",brand:"Indo Era",price:"999",total_items:"7",wishlist:false,cart:true}]
-        // });  
-    // }  
 };
 export function removeFromWishlist(id){
     return function(dispatch){
@@ -41,7 +35,7 @@ export function removeFromCart(id){
         http.get(`/deleteCart/${id}`)
         .then(response=>{
             dispatch({
-                type:'REMOVE_FROM_WISHLIST',
+                type:'REMOVE_FROM_CART',
                 data:id,
             })
         })
@@ -55,7 +49,7 @@ export function addToWishlist(id){
         http.get(`/wishlist/${id}`)
         .then(response=>{
             dispatch({
-                type:'REMOVE_FROM_WISHLIST',
+                type:'ADD_TO_WISHLIST',
                 data:id,
             })
         })
@@ -69,7 +63,7 @@ export function addToCart(id){
         http.get(`/cart/${id}`)
         .then(response=>{
             dispatch({
-                type:'REMOVE_FROM_WISHLIST',
+                type:'ADD_TO_CART',
                 data:id,
             })
         })
@@ -78,3 +72,27 @@ export function addToCart(id){
         })
     }
 } ;
+export function getCurrentItemDetails(id){
+    return function(dispatch){
+    if(id != null){
+        http.get(`/currentitem/${id}`)
+        .then(response=>{
+            var bufferBase64 = new Buffer( response.data.photo.data, 'binary' ).toString('base64');
+            dispatch({
+                type:'GET_CURRENT_ITEM_DETAILS',
+                data:response.data,
+                image: bufferBase64,
+            })
+        })
+        .catch(e=>{
+            console.log(e);
+        })
+    }
+    else{
+        dispatch({
+            type:'GET_CURRENT_ITEM_DETAILS',
+            data: null,
+            image: null,
+        })
+    }
+}};
