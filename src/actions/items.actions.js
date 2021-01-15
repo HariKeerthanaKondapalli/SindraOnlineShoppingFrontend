@@ -8,6 +8,7 @@ export function getAllItems(){
             dispatch({
                 type:'GET_ALL_ITEMS',
                 data:response.data,
+                length:response.data.length,
             })
         })
         .catch(e=>{

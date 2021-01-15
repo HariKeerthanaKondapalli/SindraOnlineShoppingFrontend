@@ -4,10 +4,12 @@ import {getAllItems,getCurrentItemDetails} from '../actions/items.actions';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ItemDetails from "./item-details.component";
+import Item from "./item.component";
 
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect,
   items: state.itemsReducer.items,
+  length: state.itemsReducer.length,
   state: state,
 });  
 
@@ -15,7 +17,7 @@ class AllItems extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    // this.retrieveItems = this.retrieveItems.bind(this);
+    this.retrieveItems = this.retrieveItems.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveItem = this.setActiveItem.bind(this);
     this.searchItem= this.searchItem.bind(this);
@@ -51,18 +53,18 @@ class AllItems extends Component {
     });
   }
 
-  // retrieveItems() {
-  //   ItemDataService.getAll()
-  //     .then(response => {
-  //       this.setState({
-  //         items: response.data
-  //       });
-  //       console.log(response.data);
-  //     })
-  //     .catch(e => {
-  //       console.log(e);
-  //     });
-  // }
+  retrieveItems() {
+    ItemDataService.getAll()
+      .then(response => {
+        this.setState({
+          items: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
   refreshList() {
     this.props.getAllItems();
     this.setState({
@@ -105,7 +107,7 @@ class AllItems extends Component {
     }
   }
   render() {
-    const { searchTitle,currentItem, currentIndex,items,currentImage } = this.state;
+    const { searchTitle,currentIndex} = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}
@@ -147,9 +149,7 @@ class AllItems extends Component {
                   onClick={() => this.setActiveItem(item, index)}
                   key={index}
                 >
-                  <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( item.photo.data, 'binary' ).toString('base64')} />
-                  <br/>
-                  {item.name}
+                  <Item id={index}/>   
                 </li>
               ))}
           </ul>

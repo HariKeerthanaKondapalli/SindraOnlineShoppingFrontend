@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import {Link} from "react-router-dom";
 import CustomerDataService from "../services/customer.service";
-import { AiOutlineHeart ,AiFillHeart} from "react-icons/ai";
 import { Modal,Button, ModalBody } from "react-bootstrap";
 import { customerCart } from "../actions/customer.actions";
 import { getCurrentItemDetails } from "../actions/items.actions";
 import ItemDetails from './item-details.component';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import Item from './item.component';
 
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect ,
@@ -127,9 +126,7 @@ class MyCart extends Component {
                         onClick={() => this.setActiveItem(item, index)}
                         key={index}
                       >
-                        <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( item.photo.data, 'binary' ).toString('base64')} />
-                        <br/>
-                        {item.name}
+                       <Item id = {index} />
                       </li>
                     ))}
                 </ul>

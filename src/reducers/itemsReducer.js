@@ -8,30 +8,30 @@ const itemsReducer = (state = initialState, action) => {
         case 'GET_ALL_ITEMS': 
             return {  
                 ...state,
-                items: action.data
+                items: action.data,
             };
         case 'REMOVE_FROM_WISHLIST' :
             return {
                 ...state,
-            }
+            };
         case 'ADD_TO_WISHLIST' :
             return {
                 ...state,
-            }
+            };
         case 'REMOVE_FROM_CART' :
             return {
                 ...state,
-            }
+            };
         case 'ADD_TO_CART' :
             return {
                 ...state,
-            }
+            };
         case 'GET_CURRENT_ITEM_DETAILS' :
             return {
                 ...state,
                 currentitem : action.data,
                 currentimage : action.image,
-            }
+            };
         default:  
             return state;  
     }

@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import {Link} from "react-router-dom";
-import CustomerDataService from "../services/customer.service";
-import { AiOutlineHeart ,AiFillHeart} from "react-icons/ai";
 import {customerWishlist} from '../actions/customer.actions';
 import {removeFromWishlist,getCurrentItemDetails} from '../actions/items.actions';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ItemDetails from "./item-details.component";
+import Item from './item.component';
 
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect,
@@ -70,7 +68,7 @@ class MyWishlist extends Component {
     // console.log("Wishlist",this.state.wishlist);
   }
   render() {
-    const { currentItem, currentIndex,wishlist,currentImage } = this.state;
+    const {  currentIndex } = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}
@@ -92,9 +90,7 @@ class MyWishlist extends Component {
                     onClick={() => this.setActiveItem(item, index)}
                     key={index}
                   >
-                    <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( item.photo.data, 'binary' ).toString('base64')} />
-                    <br/>
-                    {item.name}
+                    <Item id={index} />
                   </li>
                 ))}
             </ul>

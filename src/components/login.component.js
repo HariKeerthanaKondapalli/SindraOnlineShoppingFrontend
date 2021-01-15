@@ -52,9 +52,6 @@ class Login extends Component {
       userId: this.state.userId,
       password: this.state.password
     }
-    // this.props.loggedIn();
-    // this.props.getAllItems();
-    // this.props.history.push('/customer');
     CustomerDataService.login(data)
     .then(response=>{
       console.log(response.data.message);

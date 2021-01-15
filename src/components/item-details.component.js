@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import ItemDataService from "../services/item.service";
-import CustomerDataService from "../services/customer.service";
 import { Link } from "react-router-dom";
 import { AiOutlineHeart ,AiFillHeart} from "react-icons/ai";
 import {removeFromWishlist,addToWishlist,removeFromCart,addToCart,getCurrentItemDetails} from '../actions/items.actions';
@@ -32,7 +30,6 @@ class ItemDetails extends Component {
     addToWishlist: PropTypes.func.isRequired,  
     removeFromCart: PropTypes.func.isRequired,  
     addToCart: PropTypes.func.isRequired,  
-    // getAllItems: PropTypes.func.isRequired,
     getCurrentItemDetails : PropTypes.func.isRequired,
   };
 
@@ -42,8 +39,6 @@ class ItemDetails extends Component {
 
   addToWishlist(item){
     if(item.wishlist === true){
-      // CustomerDataService.removeFromWishlist(item.id);
-      // item.wishlist = false;
       this.props.removeFromWishlist(item.id);
       item.wishlist = false;
     }else{
@@ -61,7 +56,6 @@ class ItemDetails extends Component {
     }
   }
   render() {
-    // const { searchTitle,currentItem, currentIndex,items,currentImage } = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}

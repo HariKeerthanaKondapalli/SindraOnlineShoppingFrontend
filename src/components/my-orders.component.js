@@ -4,6 +4,7 @@ import { getCurrentItemDetails } from "../actions/items.actions";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ItemDetails from './item-details.component';
+import Item from './item.component';
 
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect ,
@@ -68,9 +69,7 @@ class MyOrders extends Component {
                     onClick={() => this.setActiveItem(item, index)}
                     key={index}
                   >
-                    <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( item.photo.data, 'binary' ).toString('base64')} />
-                    <br/>
-                    {item.name}
+                    <Item id={index} />
                   </li>
                 ))}
             </ul>
