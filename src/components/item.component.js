@@ -24,9 +24,9 @@ componentDidMount() {
     }
     return (
         <div>
-            <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( this.props.items[this.props.id].photo.data, 'binary' ).toString('base64')} />
+            <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( this.props.items[this.props.id-1].photo.data, 'binary' ).toString('base64')} />
             <br/>
-            {this.props.items[this.props.id].name}
+            {this.props.items[this.props.id-1].name}
         </div>
     );
   }

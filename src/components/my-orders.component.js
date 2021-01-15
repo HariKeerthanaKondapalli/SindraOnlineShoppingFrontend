@@ -69,7 +69,7 @@ class MyOrders extends Component {
                     onClick={() => this.setActiveItem(item, index)}
                     key={index}
                   >
-                    <Item id={index} />
+                    <Item id={item.id} />
                   </li>
                 ))}
             </ul>
