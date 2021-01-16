@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import CustomerDataService from "../services/customer.service";
 import { Modal,Button, ModalBody } from "react-bootstrap";
 import { customerCart } from "../actions/customer.actions";
-import { getCurrentItemDetails } from "../actions/items.actions";
+import { getAllItems } from "../actions/items.actions";
 import ItemDetails from './item-details.component';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -28,10 +28,6 @@ class MyCart extends Component {
         items:[],
         currentItem: null,
         currentIndex: -1,
-        currentImage:null,
-        address:"",
-        pincode:"",
-        country:"",
         buy:false,
         transaction:false,
         itemId:[],
@@ -39,30 +35,30 @@ class MyCart extends Component {
     };
   }
   static propTypes = {  
-    getCurrentItemDetails: PropTypes.func.isRequired,
     customerCart: PropTypes.func.isRequired,
+    getAllItems: PropTypes.func.isRequired,
   };
   componentDidMount() {
     this.props.customerCart();
+    this.props.getAllItems();
   }
   refreshList(){
     this.props.customerCart();
     this.setState({
       currentItem: null,
       currentIndex: -1,
-      currentImage:null
     });
   }
   setActiveItem(item ,index){
     if(this.state.currentIndex != index){
-      this.props.getCurrentItemDetails(item.id);
+      // this.props.getCurrentItemDetails(item.id);
       this.setState({
         currentItem: item,
         currentIndex: index,
       });
     }
     else{
-      this.props.getCurrentItemDetails(null);
+      // this.props.getCurrentItemDetails(null);
       this.setState({
         currentItem: null,
         currentIndex:-1,
@@ -77,8 +73,8 @@ class MyCart extends Component {
     this.transaction();
   }
   close(){
-    this.props.customerCart();
-    this.refreshList();
+    // this.props.customerCart();
+    // this.refreshList();
     this.setState({buy:!this.state.buy});
   }
   transaction(){
@@ -104,7 +100,7 @@ class MyCart extends Component {
     this.success();
   }
   render() {
-    const { currentIndex,successMessage } = this.state;
+    const { currentIndex,successMessage,currentItem } = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}
@@ -138,7 +134,9 @@ class MyCart extends Component {
                 </button>
             </div>
             <div>
-              <ItemDetails/>
+            {currentItem != null ?(
+              <ItemDetails id={currentItem.id} from="my-cart" />
+              ):(<ItemDetails id="null" from="my-cart" />)}
             </div>
             <Modal show={this.state.buy} onHide={this.close}>
                 <Modal.Header closeButton>
@@ -206,4 +204,4 @@ class MyCart extends Component {
       )
     }
 }
-export default connect(mapStateToProps,{getCurrentItemDetails,customerCart})(MyCart);
+export default connect(mapStateToProps,{customerCart,getAllItems})(MyCart);

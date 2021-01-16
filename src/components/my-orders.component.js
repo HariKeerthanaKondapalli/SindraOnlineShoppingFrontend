@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {customerOrders} from '../actions/customer.actions';
-import { getCurrentItemDetails } from "../actions/items.actions";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ItemDetails from './item-details.component';
@@ -18,12 +17,10 @@ class MyOrders extends Component {
     this.state = {
         currentItem: null,
         currentIndex: -1,
-        currentImage: null,
     };
   }
   static propTypes = {  
   customerOrders: PropTypes.func.isRequired, 
-  getCurrentItemDetails:PropTypes.func.isRequired, 
   };
 
   componentDidMount() {
@@ -31,14 +28,14 @@ class MyOrders extends Component {
   }
   setActiveItem(item ,index){
     if(this.state.currentIndex != index){
-      this.props.getCurrentItemDetails(item.id);
+      // this.props.getCurrentItemDetails(item.id);
       this.setState({
         currentItem: item,
         currentIndex: index,
       });
     }
     else{
-      this.props.getCurrentItemDetails(null);
+      // this.props.getCurrentItemDetails(null);
       this.setState({
         currentItem: null,
         currentIndex:-1,
@@ -47,7 +44,7 @@ class MyOrders extends Component {
   }
 
   render() {
-    const {  currentIndex } = this.state;
+    const {  currentIndex,currentItem } = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}
@@ -75,10 +72,12 @@ class MyOrders extends Component {
             </ul>
             </div>
             <div>
-              <ItemDetails/>
+            {currentItem != null ?(
+              <ItemDetails id={currentItem.id} from="my-orders" />
+               ):(<ItemDetails id="null" from="my-orders" />)}
             </div>
         </div>
       );
     }
 }
-export default connect(mapStateToProps,{customerOrders,getCurrentItemDetails})(MyOrders);
+export default connect(mapStateToProps,{customerOrders})(MyOrders);

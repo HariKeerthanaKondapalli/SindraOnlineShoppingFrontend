@@ -23,18 +23,52 @@ const customerReducer = (state = initialState, action) => {
         case 'CUSTOMER_WISHLIST':
             return{
                 ...state,
-                wishlist :action.data
+                wishlist :action.data,
+                wishlistLength : action.length,
             };
         case 'CUSTOMER_CART':
             return{
                 ...state,
-                cart :action.data
+                cart :action.data,
+                cartLength: action.length,
             }
         case 'CUSTOMER_ORDERS':
             return{
                 ...state,
-                orders :action.data
+                orders :action.data,
+                orderLength : action.length,
             }
+        case 'REMOVE_FROM_WISHLIST' :
+            return{
+                ...state,
+                wishlist: state.wishlist.filter(item => item.id != action.data),
+                wishlistLength: state.wishlistLength -1,
+            }
+        case 'REMOVE_FORM_CART':
+            return{
+                ...state,
+                cart: state.cart.filter(item=> item.id !== action.data),
+                cartLength: state.cartLength -1,
+            }
+        // case 'ADD_TO_WISHLIST':
+        //     var item = action.item;
+        //     // var length = state.wishlist.length;
+        //     console.log("In add custoemr wishlist",item);
+        //     return{
+        //         ...state,
+        //         wishlist:{ 
+        //             ...state.wishlist,item
+        //         }
+        //     }
+        // case 'ADD_TO_CART':
+        //     var item = action.item;
+        //     return{
+        //         ...state,
+        //         wishlist:{
+        //             ...state.wishlist,
+        //             item
+        //         }
+        //     }
         default:  
             return state;  
     }

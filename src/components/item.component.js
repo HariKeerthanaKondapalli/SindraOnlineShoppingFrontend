@@ -22,11 +22,17 @@ componentDidMount() {
         {this.props.history.push('/')}
       </div>);
     }
+    var currentItem;
+    this.props.items.map((item,index)=>{
+      if(item.id === this.props.id){
+        currentItem = item;
+      }
+    });
     return (
         <div>
-            <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( this.props.items[this.props.id-1].photo.data, 'binary' ).toString('base64')} />
+            <img style={{width:150,height:150}} src={"data:image/jpeg;base64," + new Buffer( currentItem.photo.data, 'binary' ).toString('base64')} />
             <br/>
-            {this.props.items[this.props.id-1].name}
+            {currentItem.name}
         </div>
     );
   }

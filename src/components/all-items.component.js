@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ItemDataService from "../services/item.service";
-import {getAllItems,getCurrentItemDetails} from '../actions/items.actions';
+import {getAllItems} from '../actions/items.actions';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ItemDetails from "./item-details.component";
@@ -9,7 +9,6 @@ import Item from "./item.component";
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect,
   items: state.itemsReducer.items,
-  length: state.itemsReducer.length,
   state: state,
 });  
 
@@ -25,14 +24,12 @@ class AllItems extends Component {
       items:[],
       currentItem: null,
       currentIndex: -1,
-      currentImage: null,
       searchTitle: "",
     };
   }
 
   static propTypes = {  
     getAllItems: PropTypes.func.isRequired,
-    getCurrentItemDetails : PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -75,14 +72,14 @@ class AllItems extends Component {
   setActiveItem(item, index) {
     console.log(this.props.state);
     if(this.state.currentIndex != index){
-      this.props.getCurrentItemDetails(item.id);
+      // this.props.getCurrentItemDetails(item.id);
       this.setState({
         currentItem: item,
         currentIndex: index,
       });
     }
     else{
-      this.props.getCurrentItemDetails(null);
+      // this.props.getCurrentItemDetails(null);
       this.setState({
         currentItem: null,
         currentIndex:-1,
@@ -107,7 +104,7 @@ class AllItems extends Component {
     }
   }
   render() {
-    const { searchTitle,currentIndex} = this.state;
+    const { searchTitle,currentIndex,currentItem} = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}
@@ -155,10 +152,12 @@ class AllItems extends Component {
           </ul>
         </div>
         <div className="col-md-6">
-              <ItemDetails/>
+          {currentItem != null ?(
+              <ItemDetails id={currentItem.id} from="all-items" />
+          ):(<ItemDetails id="null" from="all-items" />)}
         </div>
       </div>
     );
   }
 }
-export default connect(mapStateToProps,{getAllItems,getCurrentItemDetails})(AllItems);
+export default connect(mapStateToProps,{getAllItems})(AllItems);

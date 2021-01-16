@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {customerWishlist} from '../actions/customer.actions';
-import {removeFromWishlist,getCurrentItemDetails} from '../actions/items.actions';
+import {removeFromWishlist,getAllItems} from '../actions/items.actions';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ItemDetails from "./item-details.component";
@@ -9,7 +9,6 @@ import Item from './item.component';
 const mapStateToProps = state => ({  
   redirect: state.redirect.redirect,
   wishlist: state.customerReducer.wishlist,
-  currentItem: state.itemsReducer.currentItem,
   state:state,
 });  
 
@@ -21,46 +20,40 @@ class MyWishlist extends Component {
     this.state = {
         currentItem: null,
         currentIndex: -1,
-        currentImage:null,
-        wishlist:false,
     };
   }
   static propTypes = {  
     customerWishlist: PropTypes.func.isRequired,
-    removeFromWishlist: PropTypes.func.isRequired,  
-    getCurrentItemDetails: PropTypes.func.isRequired,
+    removeFromWishlist: PropTypes.func.isRequired, 
+    getAllItems: PropTypes.func.isRequired, 
   };
 
   componentDidMount() {
     console.log(this.props.wishlist);
     this.props.customerWishlist();
+    this.props.getAllItems();
   }
   refreshList(){
     this.props.customerWishlist();
     this.setState({
       currentItem: null,
       currentIndex: -1,
-      currentImage:null
     });
   }
   setActiveItem(item ,index){
     console.log(this.props.state);
-    console.log("current Index",this.state.currentIndex);
-    console.log("item Index",index);
     if(this.state.currentIndex != index){
-      this.props.getCurrentItemDetails(item.id);
+      // this.props.getCurrentItemDetails(item.id);
       this.setState({
         currentItem: item,
         currentIndex: index,
-        // wishlist: item.wishlist,
       });
     }
     else{
-      this.props.getCurrentItemDetails(null);
+      // this.props.getCurrentItemDetails(null);
       this.setState({
         currentItem: null,
         currentIndex:-1,
-        // wishlist:false,
       })
     }
     // this.props.customerWishlist();
@@ -68,7 +61,7 @@ class MyWishlist extends Component {
     // console.log("Wishlist",this.state.wishlist);
   }
   render() {
-    const {  currentIndex } = this.state;
+    const {  currentIndex,currentItem } = this.state;
     if(this.props.redirect){
       return (<div> 
         {this.props.history.push('/')}
@@ -96,12 +89,13 @@ class MyWishlist extends Component {
             </ul>
             </div>
             <div>
-              {/* {this.state.wishlist?( */}
-              <ItemDetails/>
+            {currentItem != null ?(
+              <ItemDetails id={currentItem.id} from="my-wishlist" />
+          ):(<ItemDetails id="null" from="my-wishlist" />)}
             </div>
           </div>
         
       );
     }
 }
-export default connect(mapStateToProps,{customerWishlist,removeFromWishlist,getCurrentItemDetails})(MyWishlist);
+export default connect(mapStateToProps,{customerWishlist,getAllItems,removeFromWishlist})(MyWishlist);

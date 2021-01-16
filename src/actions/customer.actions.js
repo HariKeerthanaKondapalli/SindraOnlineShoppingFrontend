@@ -64,6 +64,7 @@ export function customerWishlist(){
             dispatch({
                 type: "CUSTOMER_WISHLIST",
                 data: response.data,
+                length: response.data.length,
               })
         }) 
         .catch(e=>{
@@ -78,6 +79,7 @@ export function customerCart(){
             dispatch({
                 type: "CUSTOMER_CART",
                 data: response.data,
+                length: response.data.length,
               })
         }) 
         .catch(e=>{
@@ -92,6 +94,7 @@ export function customerOrders(){
             dispatch({
                 type: "CUSTOMER_ORDERS",
                 data: response.data,
+                length:response.data.length,
               })
         }) 
         .catch(e=>{
